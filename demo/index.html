@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<!-- html2pdf.js for local client-side PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
     --bg: #030712;
@@ -674,7 +676,7 @@
 <body>
 
 <header>
-  <a href="../sales/index.html" class="brand">
+  <a href="/contractor-automation-starter-pack/sales/index.html" class="brand">
     <div class="brand-mark">C</div>
     <div class="brand-text">
       <div class="brand-title">ContractorOS</div>
@@ -921,9 +923,12 @@
               Fill and compile estimate line items to generate estimate preview sheet.
             </div>
             
-            <div style="border-top:1px solid #eaeef4; padding-top:10px; margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="border-top:1px solid #eaeef4; padding-top:10px; margin-top:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 8px;">
               <span class="pdf-meta">Valid for 30 days from generation date.</span>
-              <div id="esignStatus" style="font-size:11px; font-weight:700; color:#ef4444;">Awaiting Generation</div>
+              <div style="display:flex; gap:8px; align-items:center; margin-left: auto;">
+                <button class="secondary hidden" onclick="downloadPDF('estimate')" id="btnDownloadEst" style="padding: 4px 10px; font-size:11px;">Download PDF</button>
+                <div id="esignStatus" style="font-size:11px; font-weight:700; color:#ef4444;">Awaiting Generation</div>
+              </div>
             </div>
           </div>
         </div>
@@ -948,9 +953,12 @@
             
             <div style="border-top:1px solid #eaeef4; padding-top:12px; margin-top:12px; display:flex; flex-direction: column; gap:10px;">
               <div style="font-size:11px; color:#475569; word-break: break-all;" id="invoicePaymentLink">Stripe Payment Link: <b>pay.apexcrew.demo/INV-Pending</b></div>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 8px;">
                 <span class="pdf-meta">Sync status with QuickBooks:</span>
-                <div id="invStatus" class="tag tag-warn">Idle</div>
+                <div style="display:flex; gap:8px; align-items:center; margin-left: auto;">
+                  <button class="secondary hidden" onclick="downloadPDF('invoice')" id="btnDownloadInv" style="padding: 4px 10px; font-size:11px;">Download PDF</button>
+                  <div id="invStatus" class="tag tag-warn">Idle</div>
+                </div>
               </div>
             </div>
           </div>
@@ -1130,6 +1138,9 @@ function resetDemo() {
   $("dunningTimelineContainer").classList.add('hidden');
   document.querySelectorAll('.dunning-badge').forEach(el => el.classList.remove('active'));
   
+  $("btnDownloadEst").classList.add('hidden');
+  $("btnDownloadInv").classList.add('hidden');
+  
   updateInvoiceStatusUI();
   
   $("logConsole").innerHTML = `<div class="log-line text-muted">[System] Ready to run automation simulations. Click "Auto-fill dummy data" or submit forms to trigger n8n templates.</div>`;
@@ -1271,6 +1282,7 @@ function generateEstimate() {
   log("[PDF Compiler] Compiling estimates/1042-estimate.html template...", "info");
   renderEstimatePDF();
   log("Draft Estimate PDF generated successfully. Status: Pending Signatures.", "ok");
+  $("btnDownloadEst").classList.remove('hidden');
   showPreviewTab(2);
 }
 
@@ -1391,6 +1403,7 @@ function syncInvoice() {
     
     $("invNum").innerText = "#INV-1042-EST";
     $("invoicePaymentLink").innerHTML = `Stripe Payment Link: <b>pay.apexcrew.demo/INV-1042-EST</b>`;
+    $("btnDownloadInv").classList.remove('hidden');
     
     // Generate Invoice PDF rows
     const isEmergency = $("estUrgency").value === "Emergency";
@@ -1445,6 +1458,7 @@ function syncInvoice() {
     $("invNum").innerText = "#INV-Pending";
     $("invBody").innerHTML = `<div style="color: #64748b; text-align: center; padding: 40px 0; font-size: 13px;">Create and send an estimate first.</div>`;
     $("invoicePaymentLink").innerHTML = "Stripe Payment Link: <b>pay.apexcrew.demo/INV-Pending</b>";
+    $("btnDownloadInv").classList.add('hidden');
   }
   
   updateInvoiceStatusUI();
@@ -1573,6 +1587,32 @@ function updateTracker() {
   } else {
     tInv.innerHTML = `Idle`;
   }
+}
+
+// downloadPDF function utilizing html2pdf.js library
+function downloadPDF(type) {
+  const element = type === 'estimate' ? $('estimatePreview') : $('invoicePreview');
+  const clientName = type === 'estimate' ? ($('estClient').value.trim() || 'Client') : ($('estClient').value.trim() || 'Client');
+  const cleanName = clientName.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  const filename = type === 'estimate' ? `estimate_${cleanName}.pdf` : `invoice_${cleanName}.pdf`;
+  
+  log(`[PDF Generator] Initializing download for ${filename}...`, "info");
+  
+  // Custom printing rules for html2pdf
+  const opt = {
+    margin:       0.3,
+    filename:     filename,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2.5, useCORS: true, logging: false },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+  
+  html2pdf().set(opt).from(element).save().then(() => {
+    log(`[PDF Generator] ${filename} successfully downloaded.`, "ok");
+    toast(`${type === 'estimate' ? 'Estimate' : 'Invoice'} PDF downloaded`, "ok");
+  }).catch(err => {
+    log(`[PDF Generator] Error generating file download: ${err}`, "err");
+  });
 }
 </script>
 </body>
