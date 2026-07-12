@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContractorOS — High-Performance Automation for General Contractors & Specialty Trades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #030712;
+    --panel: #0b0f19;
+    --panel-glow: rgba(255, 159, 28, 0.03);
+    --border: #1f2937;
+    --border-hover: #374151;
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+    --accent: #ff9f1c;
+    --accent-rgb: 255, 159, 28;
+    --accent-2: #2ec4b6;
+    --accent-2-rgb: 46, 196, 182;
+    --primary-gradient: linear-gradient(135deg, #ff9f1c 0%, #ff5e62 100%);
+    --secondary-gradient: linear-gradient(135deg, #2ec4b6 0%, #0d9488 100%);
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --err: #ef4444;
+    --font-heading: 'Outfit', -apple-system, sans-serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  }
+
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(255, 159, 28, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(46, 196, 182, 0.05) 0%, transparent 45%);
+    background-attachment: fixed;
+  }
+
+  /* Decorative Background Glows */
+  .bg-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--accent-rgb), 0.04) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .bg-glow-1 { top: -200px; left: -100px; }
+  .bg-glow-2 { top: 800px; right: -200px; }
+  .bg-glow-3 { bottom: -100px; left: 10%; }
+
+  /* Typography */
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  h1 { font-size: 3rem; }
+  h2 { font-size: 2.25rem; }
+  h3 { font-size: 1.5rem; }
+  
+  p { color: var(--muted); }
+
+  /* Header */
+  header {
+    position: sticky; 
+    top: 0; 
+    z-index: 100; 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(3, 7, 18, 0.85); 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 40px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    transition: all 0.3s ease;
+  }
+  
+  .brand { 
+    display: flex; 
+    align-items: center; 
+    gap: 14px; 
+    text-decoration: none;
+    color: var(--text);
+  }
+  
+  .brand-mark { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 12px; 
+    background: var(--primary-gradient); 
+    color: white; 
+    font-family: var(--font-heading);
+    font-weight: 900; 
+    display: grid; 
+    place-items: center; 
+    font-size: 20px; 
+    box-shadow: 0 4px 15px rgba(255, 159, 28, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(45deg);
+    animation: shine 6s infinite linear;
+  }
+  @keyframes shine {
+    0% { transform: translate(-30%, -30%) rotate(45deg); }
+    100% { transform: translate(130%, 130%) rotate(45deg); }
+  }
+  
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .brand-subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  nav a { 
+    color: var(--muted); 
+    text-decoration: none; 
+    font-size: 14px; 
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 4px 0;
+  }
+  nav a:hover {
+    color: var(--text);
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: width 0.2s ease;
+    border-radius: 2px;
+  }
+  nav a:hover::after {
+    width: 100%;
+  }
+
+  /* Main Container */
+  main { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 40px 24px 100px; 
+    display: flex;
+    flex-direction: column;
+    gap: 80px; 
+  }
+
+  /* Shared Panels & Cards */
+  .panel { 
+    background: var(--panel); 
+    border: 1px solid var(--border); 
+    border-radius: 24px; 
+    padding: 48px; 
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+    background-image: radial-gradient(circle at 100% 0%, var(--panel-glow), transparent 40%);
+  }
+
+  .grid-2 { 
+    display: grid; 
+    grid-template-columns: 1.1fr 0.9fr; 
+    gap: 40px; 
+    align-items: center;
+  }
+  
+  .grid-3 { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 24px; 
+  }
+
+  /* Buttons & CTAs */
+  .cta { 
+    background: var(--primary-gradient); 
+    color: white; 
+    border: 0; 
+    padding: 14px 28px; 
+    border-radius: 12px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center;
+    gap: 10px; 
+    text-decoration: none;
+    font-size: 15px;
+    box-shadow: 0 4px 20px rgba(255, 159, 28, 0.25);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .cta:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 159, 28, 0.4);
+    filter: brightness(1.05);
+  }
+  .cta:active {
+    transform: translateY(0);
+  }
+  
+  .cta.secondary { 
+    background: rgba(255, 255, 255, 0.04); 
+    border: 1px solid var(--border); 
+    color: var(--text);
+    box-shadow: none;
+  }
+  .cta.secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-hover);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Hero Section */
+  .badge-container {
+    margin-bottom: 20px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 159, 28, 0.08);
+    border: 1px solid rgba(255, 159, 28, 0.2);
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .hero-badge-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 159, 28, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(255, 159, 28, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 159, 28, 0); }
+  }
+
+  .gradient-text {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero-kpis { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 16px; 
+    margin-top: 40px;
+  }
+  .kpi { 
+    background: rgba(255, 255, 255, 0.02); 
+    border: 1px solid var(--border); 
+    border-radius: 16px; 
+    padding: 18px; 
+    transition: all 0.3s ease;
+  }
+  .kpi:hover {
+    background: rgba(255, 255, 255, 0.04); 
+    border-color: var(--border-hover);
+  }
+  .kpi .v { 
+    font-family: var(--font-heading);
+    font-size: 26px; 
+    font-weight: 800; 
+    color: var(--text);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+  .kpi .l { 
+    font-size: 13px; 
+    color: var(--muted); 
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* Interactive Pipeline Visualization */
+  .pipeline-visual {
+    background: #060913;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: relative;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);
+  }
+  .pipeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+  .pipeline-dot-group {
+    display: flex;
+    gap: 6px;
+  }
+  .pipeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1f2937;
+  }
+  .pipeline-dot:nth-child(1) { background: #ef4444; }
+  .pipeline-dot:nth-child(2) { background: #f59e0b; }
+  .pipeline-dot:nth-child(3) { background: #10b981; }
+
+  .pipeline-title {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: monospace;
+  }
+
+  .pipeline-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+  }
+  .pipeline-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+  }
+  .pipeline-step.active {
+    background: rgba(255, 159, 28, 0.04);
+    border-color: rgba(255, 159, 28, 0.3);
+  }
+  .pipeline-step:hover {
+    transform: translateX(4px);
+    border-color: var(--border-hover);
+  }
+  .pipeline-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .pipeline-step.active .pipeline-icon {
+    background: rgba(255, 159, 28, 0.15);
+    color: var(--accent);
+  }
+  .pipeline-step.completed .pipeline-icon {
+    background: rgba(46, 196, 182, 0.15);
+    color: var(--accent-2);
+  }
+  .pipeline-text {
+    flex-grow: 1;
+  }
+  .pipeline-step-title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .pipeline-step-desc {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .pipeline-status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+
+  /* Pain Points Section */
+  .section-intro {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 40px;
+  }
+  .section-intro h2 {
+    margin-bottom: 12px;
+  }
+
+  .card { 
+    background: linear-gradient(180deg, rgba(255,255,255,0.015) 0%, rgba(255,255,255,0.005) 100%); 
+    border: 1px solid var(--border); 
+    border-radius: 20px; 
+    padding: 28px; 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .card:hover { 
+    transform: translateY(-6px);
+    border-color: rgba(255, 159, 28, 0.2);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6), 0 0 1px 1px rgba(255,159,28,0.1);
+  }
+  
+  .card-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .card:hover .card-icon-wrap {
+    background: rgba(255, 159, 28, 0.1);
+    color: var(--accent);
+    transform: scale(1.05);
+    border-color: rgba(255, 159, 28, 0.2);
+  }
+
+  .card h3 { 
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .card p { 
+    font-size: 14px; 
+    line-height: 1.5;
+  }
+
+  /* List & Tags */
+  ul.plain { 
+    list-style: none; 
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  ul.plain li { 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px; 
+    color: var(--muted); 
+  }
+  ul.plain li svg {
+    flex-shrink: 0;
+  }
+
+  .tag { 
+    display: inline-flex; 
+    align-items: center;
+    padding: 4px 10px; 
+    border-radius: 999px; 
+    font-size: 11px; 
+    font-weight: 700; 
+  }
+  .tag-ok { 
+    background: rgba(16, 185, 129, 0.08); 
+    color: var(--ok); 
+    border: 1px solid rgba(16, 185, 129, 0.2); 
+  }
+  .tag-warn { 
+    background: rgba(245, 158, 11, 0.08); 
+    color: var(--warn); 
+    border: 1px solid rgba(245, 158, 11, 0.2); 
+  }
+
+  /* Demo Embed Box */
+  .demo-showcase {
+    background: linear-gradient(135deg, rgba(28,35,51,0.7) 0%, rgba(15,17,21,0.7) 100%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+    background-image: radial-gradient(circle at 50% 50%, rgba(46, 196, 182, 0.04), transparent 50%);
+  }
+
+  /* Pricing Cards Section */
+  .price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 10px 0;
+  }
+  .price { 
+    font-family: var(--font-heading);
+    font-size: 32px; 
+    font-weight: 800; 
+    color: var(--text);
+  }
+  .price-period {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Featured Pricing Card */
+  .card.featured {
+    border-color: rgba(255, 159, 28, 0.4);
+    background: linear-gradient(180deg, rgba(255, 159, 28, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 159, 28, 0.2);
+  }
+  .card.featured::before {
+    background: linear-gradient(180deg, rgba(255, 159, 28, 0.3), transparent);
+  }
+  .card.featured:hover {
+    border-color: rgba(255, 159, 28, 0.6);
+    box-shadow: 0 20px 50px rgba(255, 159, 28, 0.1), 0 0 0 1px rgba(255, 159, 28, 0.3);
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: var(--primary-gradient);
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* FAQ Accordion */
+  .faq-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  details {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 24px;
+    transition: all 0.3s ease;
+  }
+  details[open] {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: var(--border-hover);
+  }
+  details:hover {
+    border-color: var(--border-hover);
+  }
+
+  summary {
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    outline: none;
+    user-select: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    font-family: monospace;
+    font-size: 20px;
+    color: var(--accent);
+    transition: transform 0.25s ease;
+  }
+  details[open] summary::after {
+    transform: rotate(45deg);
+  }
+  
+  details p {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Bottom CTA */
+  .cta-section {
+    text-align: center;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 159, 28, 0.06), transparent 60%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 60px 40px;
+  }
+  .cta-section h2 {
+    font-size: 2.5rem;
+    max-width: 600px;
+  }
+  .cta-section p {
+    font-size: 16px;
+    max-width: 500px;
+  }
+
+  /* Tech Stack Chip Grid */
+  .stack { 
+    display: flex; 
+    gap: 8px; 
+    flex-wrap: wrap; 
+    margin-top: 12px;
+  }
+  .stack .chip { 
+    padding: 6px 12px; 
+    background: rgba(255,255,255,0.02); 
+    border: 1px solid var(--border); 
+    border-radius: 99px; 
+    font-size: 12px; 
+    color: var(--muted); 
+    font-weight: 500;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 30px 40px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    background: rgba(3, 7, 18, 0.4);
+  }
+
+  /* Responsive Rules */
+  @media (max-width: 968px) { 
+    h1 { font-size: 2.25rem; }
+    h2 { font-size: 1.75rem; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; } 
+    .panel { padding: 30px; }
+    .card.featured { transform: scale(1); }
+  }
+
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 20px;
+      align-items: center;
+    }
+    nav {
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    main {
+      padding: 20px 16px 60px;
+      gap: 40px;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+  }
+
+  @media (max-width: 640px) {
+    .hero-kpis {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .panel {
+      padding: 20px;
+      border-radius: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pipeline-step {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .pipeline-status-badge {
+      align-self: flex-end;
+    }
+    .hero-cta-group {
+      flex-direction: column;
+      width: 100%;
+    }
+    .hero-cta-group .cta {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<div class="bg-glow bg-glow-3"></div>
+
+<header>
+  <a href="#" class="brand">
+    <div class="brand-mark">C</div>
+    <div class="brand-text">
+      <div class="brand-title">ContractorOS</div>
+      <div class="brand-subtitle">Automation Starter Pack</div>
+    </div>
+  </a>
+  <nav>
+    <a href="#pains">Pain Points</a>
+    <a href="#demo">Interactive Demo</a>
+    <a href="#offer">Pricing &amp; Packages</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<main>
+  <!-- Hero Section -->
+  <section class="panel">
+    <div class="grid-2">
+      <div>
+        <div class="badge-container">
+          <div class="hero-badge">
+            <span class="hero-badge-pulse"></span>
+            v1.0 Release
+          </div>
+        </div>
+        <h1 style="margin-bottom:16px;">Stop losing time to admin. Build a <span class="gradient-text">fully automated</span> crew operations engine.</h1>
+        <p style="font-size:16px; margin-bottom:24px;">Deploy five ready-to-use n8n workflow templates to capture leads, sync e-signs, track daily field logs, and automate late payment reminders.</p>
+        
+        <div class="hero-cta-group">
+          <a class="cta" href="#offer">
+            <span>View Packages</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+          <a class="cta secondary" href="../demo/index.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <span>Launch Sandbox Demo</span>
+          </a>
+        </div>
+
+        <div class="hero-kpis">
+          <div class="kpi">
+            <div class="v">&lt; 5m</div>
+            <div class="l">Auto lead response time</div>
+          </div>
+          <div class="kpi">
+            <div class="v">1 Click</div>
+            <div class="l">Estimate to e-sign setup</div>
+          </div>
+          <div class="kpi">
+            <div class="v">80%</div>
+            <div class="l">Reduction in invoice follow-up</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Premium Hero Graphic -->
+      <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+        <div style="position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 50px rgba(255, 159, 28, 0.1); border: 1px solid rgba(255, 255, 255, 0.08); transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+          <img src="hero.png" alt="ContractorOS Automation Architecture" style="max-width: 100%; height: auto; display: block;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow Pipeline Section -->
+  <section class="panel" style="background-image: radial-gradient(circle at 0% 100%, var(--panel-glow), transparent 45%);">
+    <div class="grid-2">
+      <div class="pipeline-visual">
+        <div class="pipeline-header">
+          <div class="pipeline-dot-group">
+            <span class="pipeline-dot"></span>
+            <span class="pipeline-dot"></span>
+            <span class="pipeline-dot"></span>
+          </div>
+          <div class="pipeline-title">contractor-os-workflow.json</div>
+        </div>
+        
+        <div class="pipeline-flow">
+          <div class="pipeline-step completed">
+            <div class="pipeline-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div class="pipeline-text">
+              <div class="pipeline-step-title">01. Lead Captured</div>
+              <div class="pipeline-step-desc">Airtable Form &bull; SMS Auto-reply sent</div>
+            </div>
+            <div class="pipeline-status-badge tag-ok">Triggered</div>
+          </div>
+
+          <div class="pipeline-step completed">
+            <div class="pipeline-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline>
+            </div>
+            <div class="pipeline-text">
+              <div class="pipeline-step-title">02. Estimate PDF &amp; E-Sign</div>
+              <div class="pipeline-step-desc">WeasyPrint PDF &bull; Signature linked</div>
+            </div>
+            <div class="pipeline-status-badge tag-ok">Signed</div>
+          </div>
+
+          <div class="pipeline-step active">
+            <div class="pipeline-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="pipeline-text">
+              <div class="pipeline-step-title">03. Change Order Guard</div>
+              <div class="pipeline-step-desc">Blocks unapproved work on-site</div>
+            </div>
+            <div class="pipeline-status-badge tag-warn">Active</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="pipeline-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <div class="pipeline-text">
+              <div class="pipeline-step-title">04. Daily Report Generated</div>
+              <div class="pipeline-step-desc">Photo log compiled &bull; Client updated</div>
+            </div>
+            <div class="pipeline-status-badge tag" style="background:rgba(255,255,255,0.03);color:var(--muted);border:1px solid var(--border)">Queued</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="pipeline-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <div class="pipeline-text">
+              <div class="pipeline-step-title">05. Invoice Reminders</div>
+              <div class="pipeline-step-desc">QuickBooks sync &bull; 3-stage follow-up</div>
+            </div>
+            <div class="pipeline-status-badge tag" style="background:rgba(255,255,255,0.03);color:var(--muted);border:1px solid var(--border)">Queued</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="hero-badge" style="margin-bottom:12px;">Automated Lifecycle</div>
+        <h2>Five self-contained, sequential templates</h2>
+        <p style="margin-bottom:20px;">Each step in the ContractorOS starter pack triggers automatically based on real-world actions, passing data instantly between Airtable, Twilio, and QuickBooks.</p>
+        <ul class="plain">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Fully documented JSON templates ready for n8n or Make import.</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Error-handling routines included in every template block.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pain Points Section -->
+  <section id="pains" class="section-intro-container">
+    <div class="section-intro">
+      <div class="hero-badge" style="margin-bottom:12px;">Admin Tax</div>
+      <h2>Traditional operations scale with headaches</h2>
+      <p>Without structured automations, crews waste hours on phone tags, paper handoffs, and chasing down receivables.</p>
+    </div>
+    
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+        <h3>Lost Lead Leakage</h3>
+        <p>Prospects get cold within hours. When estimate creation or calendar coordination drags, competitors win the trade.</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <h3>Paper Chaos &amp; Creep</h3>
+        <p>On-site change orders are made verbally or lost on paper. Contractors perform out-of-scope work that goes unbilled.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+        <h3>Late Receivables</h3>
+        <p>Manual invoicing leads to aged accounts. Lack of auto-reminders forces you to play collections agent instead of builder.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sandbox Showcase Section -->
+  <section id="demo" class="demo-showcase">
+    <div class="hero-badge">Interactive Test Flight</div>
+    <h2 style="font-size: 2rem; max-width: 650px;">Run a simulation of the lead-to-paid lifecycle</h2>
+    <p style="max-width: 500px;">Experience how the system captures a lead, calculates costs, sends PDF estimates for signing, issues invoices, and automatically handles reminders.</p>
+    <div class="stack" style="justify-content:center; margin-bottom:10px;">
+      <span class="tag tag-ok">
+        <span class="hero-badge-pulse"></span>
+        No registration required
+      </span>
+      <span class="tag tag-ok">
+        Instant local sandboxing
+      </span>
+    </div>
+    <a class="cta" href="../demo/index.html" style="font-size:16px; padding:16px 36px;">
+      <span>Launch Interactive Sandbox Demo</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+    </a>
+  </section>
+
+  <!-- Pricing Cards Section -->
+  <section id="offer">
+    <div class="section-intro">
+      <div class="hero-badge" style="margin-bottom:12px;">Pricing &amp; Deployment</div>
+      <h2>Predictable pricing, instant workflow value</h2>
+      <p>Deploy the templates yourself, book an operations audit, or hire us for a fully managed custom build.</p>
+    </div>
+
+    <div class="grid-3" style="align-items: stretch; margin-top:20px;">
+      <!-- Audit -->
+      <div class="card">
+        <h3>$199 Process Audit</h3>
+        <div class="price-wrapper">
+          <span class="price">$199</span>
+          <span class="price-period">one-time</span>
+        </div>
+        <p style="font-size: 13px; min-height: 48px;">Perfect for discovering bottlenecks and identifying key low-hanging automation fruit in your current stack.</p>
+        <hr class="div" />
+        <ul class="plain" style="flex-grow:1;">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Current stack mapping</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Identify 3 quick-win fixes</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Custom automation roadmap</span>
+          </li>
+        </ul>
+        <button class="cta secondary" style="width:100%;margin-top:20px;justify-content:center;" onclick="location.href='mailto:kennykriberney@gmail.com?subject=ContractorOS%20Audit%20Request'">Book Audit</button>
+      </div>
+
+      <!-- Starter Build -->
+      <div class="card featured">
+        <span class="popular-badge">Most Popular</span>
+        <h3>$1,500 Starter Build</h3>
+        <div class="price-wrapper">
+          <span class="price">$1,500</span>
+          <span class="price-period">one-time setup</span>
+        </div>
+        <p style="font-size: 13px; min-height: 48px;">We install the intake, estimate generator, invoice pipeline, and email/SMS channels directly to your Airtable + n8n/Make accounts.</p>
+        <hr class="div" />
+        <ul class="plain" style="flex-grow:1;">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span style="color:var(--text)"><b>All 5 workflow templates</b> live</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span style="color:var(--text)">Cal.com + Airtable setup</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>PDF template styling</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Live crew test simulation</span>
+          </li>
+        </ul>
+        <button class="cta" style="width:100%;margin-top:20px;justify-content:center;" onclick="location.href='mailto:kennykriberney@gmail.com?subject=ContractorOS%20Starter%20Build%20Request'">Buy Starter Build</button>
+      </div>
+
+      <!-- Managed -->
+      <div class="card">
+        <h3>Managed Operations</h3>
+        <div class="price-wrapper">
+          <span class="price">$399</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <p style="font-size: 13px; min-height: 48px;">Continuous workflow management, monthly performance reports, layout adjustments, and developer support on-call.</p>
+        <hr class="div" />
+        <ul class="plain" style="flex-grow:1;">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Workflows monitored 24/7</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Quickbooks &amp; ERP sync tweaks</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>New automation builds (1/mo)</span>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Priority phone + SMS support</span>
+          </li>
+        </ul>
+        <button class="cta secondary" style="width:100%;margin-top:20px;justify-content:center;" onclick="location.href='mailto:kennykriberney@gmail.com?subject=ContractorOS%20Managed%20Request'">Start Managed</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq">
+    <div class="section-intro">
+      <div class="hero-badge" style="margin-bottom:12px;">FAQ</div>
+      <h2>Common questions on setup</h2>
+    </div>
+
+    <div class="faq-grid">
+      <details open>
+        <summary>Will this work for my specific trade?</summary>
+        <p>Yes. ContractorOS templates are built with standard data fields. We configure specific picklists, tax codes, and terminology specifically for your trade during installation—whether you do roofing, plumbing, HVAC, electrical, or general contracting.</p>
+      </details>
+
+      <details>
+        <summary>What software tools do I need to run this?</summary>
+        <p>The standard stack operates on Airtable (for the base database), Cal.com (for online booking), Twilio (for crew/client text messages), n8n or Make (for the automation hubs), and QuickBooks Online (for financial sync). We help you set up accounts under your own control.</p>
+      </details>
+
+      <details>
+        <summary>Do I or my crew need a software background?</summary>
+        <p>Not at all. The core design philosophy is "zero-training required for crews." The field team interacts only with simple, mobile-friendly forms, while clients view standard PDF documents and sign links. Your office handles approvals inside a clean Airtable board.</p>
+      </details>
+
+      <details>
+        <summary>How fast can we go live?</summary>
+        <p>Once we have credentials and access, the base template installation is ready in 24–48 hours. Tailoring forms, setting up your logo/branding, and running end-to-end sandbox tests with your crew typically takes between 7 to 10 business days.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Bottom CTA Section -->
+  <section class="panel cta-section">
+    <h2>Ready to claim back your office hours?</h2>
+    <p>Let's map out your existing process, remove double-entry, and get your field crew running at maximum efficiency.</p>
+    <a class="cta" href="mailto:kennykriberney@gmail.com?subject=ContractorOS%20Audit%20Request">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      <span>Email Ken to schedule discovery</span>
+    </a>
+    <div style="font-size: 13px; color: var(--muted); margin-top:8px;">Or reach out at: <b>kennykriberney@gmail.com</b></div>
+  </section>
+</main>
+
+<footer>
+  <div>&copy; 2026 ContractorOS. Designed for high-velocity trade professionals. All rights reserved.</div>
+  <div class="stack" style="justify-content:center; margin-top:12px;">
+    <span class="chip">n8n</span>
+    <span class="chip">Make.com</span>
+    <span class="chip">Airtable</span>
+    <span class="chip">QuickBooks</span>
+    <span class="chip">Cal.com</span>
+  </div>
+</footer>
+
+</body>
+</html>

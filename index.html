@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kenny Kriberney — AI Application Developer</title>
+  <meta name="description" content="Systems veteran turned AI application builder. 15+ years of technical depth, now shipping AI-powered tools and integrating LLMs into production workflows.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-card-hover: #1a1a28;
+      --accent: #00b4d8;
+      --accent-dim: #0077b6;
+      --purple: #7c3aed;
+      --text: #e8e8ef;
+      --text-dim: #8888a0;
+      --text-muted: #555570;
+      --border: #1e1e30;
+      --gradient: linear-gradient(135deg, #00b4d8, #7c3aed);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #48cae4; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* === NAV === */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    nav .container {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 18px;
+      background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--text-dim); font-size: 14px; font-weight: 500; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* === HERO === */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding-top: 80px;
+    }
+    .hero-content { width: 100%; }
+    .hero-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; color: var(--accent);
+      background: rgba(0,180,216,0.08);
+      border: 1px solid rgba(0,180,216,0.2);
+      padding: 6px 14px; border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 800; line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .hero h1 span {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px; color: var(--text-dim);
+      max-width: 600px; margin-bottom: 32px;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 8px;
+      font-size: 15px; font-weight: 600;
+      transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: var(--gradient); color: white;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,180,216,0.3); }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* === SECTIONS === */
+    section { padding: 80px 0; }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 32px; font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    /* === ABOUT === */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .about-text p { color: var(--text-dim); margin-bottom: 16px; font-size: 16px; }
+    .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent-dim); }
+    .stat-number {
+      font-size: 28px; font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+    /* === SKILLS === */
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .skill-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .skill-group:hover { border-color: var(--accent-dim); }
+    .skill-group h3 {
+      font-size: 15px; font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag {
+      font-size: 13px; color: var(--text-dim);
+      background: rgba(255,255,255,0.04);
+      padding: 4px 12px; border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* === PROJECTS === */
+    .projects-grid { display: grid; gap: 20px; }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.2s;
+    }
+    .project-card:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .project-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+    .project-name { font-size: 18px; font-weight: 600; }
+    .project-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--purple);
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.2);
+      padding: 3px 10px; border-radius: 12px;
+      white-space: nowrap;
+    }
+    .project-desc { color: var(--text-dim); font-size: 15px; margin-bottom: 16px; }
+    .project-tech {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .tech-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      padding: 3px 10px; border-radius: 4px;
+    }
+
+    /* === EXPERIENCE === */
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 2px; background: var(--border);
+    }
+    .timeline-item { position: relative; margin-bottom: 40px; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -28px; top: 8px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--gradient);
+    }
+    .timeline-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .timeline-company {
+      font-size: 20px; font-weight: 600; margin-bottom: 4px;
+    }
+    .timeline-role {
+      font-size: 15px; color: var(--accent); margin-bottom: 12px;
+    }
+    .timeline-desc {
+      color: var(--text-dim); font-size: 15px;
+    }
+    .timeline-desc li { margin-bottom: 8px; }
+
+    /* === CONTACT === */
+    .contact-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .contact-card:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+    .contact-icon { font-size: 24px; margin-bottom: 8px; }
+    .contact-label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+    .contact-value { font-size: 15px; font-weight: 500; }
+
+    /* === FOOTER === */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0; text-align: center;
+      color: var(--text-muted); font-size: 14px;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 13px; }
+      section { padding: 60px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-logo">KK</div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-tag">// AI Application Developer</div>
+      <h1>Systems veteran,<br>now <span>shipping AI.</span></h1>
+      <p>15+ years of technical depth — from defense-sector Linux administration to building AI-powered tools with local and cloud LLMs. I turn complex systems thinking into production software.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="https://github.com/kkrib412" class="btn btn-secondary" target="_blank">GitHub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="container">
+    <div class="section-label">// About</div>
+    <div class="section-title">Building at the intersection of systems & AI</div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I spent 6 years at CACI International managing critical Linux infrastructure in security-compliant defense environments. Before that, I ran 100+ independent technical engagements — building software, consulting, and solving hard problems under pressure.</p>
+        <p>Now I'm focused on AI application development: deploying multi-model agent systems, integrating LLM APIs, and building tools that put AI to work in real-world workflows.</p>
+        <p>Based in Pittsburgh, PA. Open to remote roles across US time zones.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Years Technical</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100+</div>
+          <div class="stat-label">Client Engagements</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">6</div>
+          <div class="stat-label">Years Defense</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">Curiosity</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <div class="section-label">// Skills</div>
+    <div class="section-title">What I work with</div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3>AI / LLM</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Ollama</span>
+          <span class="skill-tag">OpenRouter</span>
+          <span class="skill-tag">LM Studio</span>
+          <span class="skill-tag">Multi-model Agents</span>
+          <span class="skill-tag">RAG</span>
+          <span class="skill-tag">Prompt Engineering</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Languages</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Bash</span>
+          <span class="skill-tag">Shell</span>
+          <span class="skill-tag">C++</span>
+          <span class="skill-tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Platform & Infra</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Linux (Ubuntu)</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">GitHub</span>
+          <span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">Homelab</span>
+          <span class="skill-tag">Self-hosted LLMs</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Frontend</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Responsive Design</span>
+          <span class="skill-tag">Node.js</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Systems</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Linux Admin</span>
+          <span class="skill-tag">Security Compliance</span>
+          <span class="skill-tag">Incident Response</span>
+          <span class="skill-tag">Root-Cause Analysis</span>
+          <span class="skill-tag">Monitoring</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Soft Skills</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Client Management</span>
+          <span class="skill-tag">Rapid Prototyping</span>
+          <span class="skill-tag">Requirements Gathering</span>
+          <span class="skill-tag">Technical Writing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="section-label">// Projects</div>
+    <div class="section-title">What I've built</div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">Local AI Agent Lab</div>
+          <span class="project-badge">AI Agents</span>
+        </div>
+        <div class="project-desc">
+          Multi-model AI agent environment deployed on self-hosted Linux infrastructure. Integrates Ollama for local inference, OpenRouter for cloud model routing, and custom agent personas with automated task workflows. Includes conversation memory, tool-use chains, and API-first architecture.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Ollama</span>
+          <span class="tech-tag">OpenRouter</span>
+          <span class="tech-tag">Linux</span>
+          <span class="tech-tag">REST APIs</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">Options Flow Monitor</div>
+          <span class="project-badge">FinTech</span>
+        </div>
+        <div class="project-desc">
+          Automated trading intelligence system that fetches real-time market data, calculates Fibonacci retracement levels across 15 watchlist tickers, and delivers daily market digests with key support/resistance levels. Runs as a scheduled cron job with proximity-based alerts.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Yahoo Finance API</span>
+          <span class="tech-tag">Cron</span>
+          <span class="tech-tag">Fibonacci Analysis</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">Career Ops Automation</div>
+          <span class="project-badge">Automation</span>
+        </div>
+        <div class="project-desc">
+          AI-driven job search pipeline that scans 800+ listings across major tech companies, evaluates roles against personalized criteria, generates tailored PDF resumes, and tracks application status — all orchestrated through autonomous agent workflows.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Chromium</span>
+          <span class="tech-tag">AI Agents</span>
+          <span class="tech-tag">PDF Generation</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-name">AI-Powered Web Application</div>
+          <span class="project-badge">Full Stack</span>
+        </div>
+        <div class="project-desc">
+          Client-facing web application integrating live LLM APIs for intelligent user interactions. Built from requirements through deployment with responsive UI, API integration layer, and iterative feature development under tight deadlines.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">HTML/CSS/JS</span>
+          <span class="tech-tag">REST API</span>
+          <span class="tech-tag">LLM Integration</span>
+          <span class="tech-tag">Responsive Design</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="container">
+    <div class="section-label">// Experience</div>
+    <div class="section-title">Where I've been</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-period">2022 — Present</div>
+        <div class="timeline-company">Independent / KGK Handyman</div>
+        <div class="timeline-role">Software Developer & Technical Consultant</div>
+        <ul class="timeline-desc">
+          <li>Designed and built client-facing web applications and AI-assisted tools across 100+ engagements</li>
+          <li>Integrated local and cloud-based LLMs into custom workflows for practical AI application development</li>
+          <li>Managed full project lifecycles from requirements through testing and deployment</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-period">2016 — 2022</div>
+        <div class="timeline-company">CACI International</div>
+        <div class="timeline-role">Linux / Systems Administrator</div>
+        <ul class="timeline-desc">
+          <li>Administered critical Linux infrastructure in security-compliant defense environments</li>
+          <li>Automated routine tasks with Bash/shell scripting, improving reliability and consistency</li>
+          <li>Diagnosed complex system failures using structured root-cause analysis with detailed documentation</li>
+          <li>Enforced security and compliance standards across all system operations</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-period">Ongoing</div>
+        <div class="timeline-company">Independent</div>
+        <div class="timeline-role">Automotive Diagnostic Technician</div>
+        <ul class="timeline-desc">
+          <li>Advanced diagnostic tooling and systematic fault-isolation across complex multi-system environments</li>
+          <li>Skills translate directly to software debugging and root-cause analysis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-label">// Contact</div>
+    <div class="section-title">Let's connect</div>
+    <div class="contact-grid">
+      <a href="mailto:kennykriberney@gmail.com" class="contact-card">
+        <div class="contact-icon">✉️</div>
+        <div class="contact-label">Email</div>
+        <div class="contact-value">kennykriberney@gmail.com</div>
+      </a>
+      <a href="https://linkedin.com/in/kennykriberney" target="_blank" class="contact-card">
+        <div class="contact-icon">💼</div>
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">kennykriberney</div>
+      </a>
+      <a href="https://github.com/kkrib412" target="_blank" class="contact-card">
+        <div class="contact-icon">🐙</div>
+        <div class="contact-label">GitHub</div>
+        <div class="contact-value">kkrib412</div>
+      </a>
+      <a href="tel:+14124994132" class="contact-card">
+        <div class="contact-icon">📱</div>
+        <div class="contact-label">Phone</div>
+        <div class="contact-value">(412) 499-4132</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Kenny Kriberney · Pittsburgh, PA · Built with purpose.</p>
+  </div>
+</footer>
+
+</body>
+</html>
